@@ -12,8 +12,6 @@ if has('vim_starting')
 endif
 call neobundle#rc(expand('~/.vim/bundle'))
 
-NeoBundleLocal expand('~/.vim/bundle.local')
-NeoBundle 'altercation/solarized'
 NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
 NeoBundle 'git://github.com/Shougo/neocomplcache.git'
 NeoBundle 'git://github.com/Shougo/neomru.vim.git'
@@ -26,9 +24,7 @@ NeoBundle 'git://github.com/thinca/vim-qfreplace.git'
 NeoBundle 'git://github.com/airblade/vim-gitgutter.git'
 NeoBundle 'git://github.com/hrsh7th/vim-better-css-indent.git'
 NeoBundle 'git://github.com/hrsh7th/vim-versions.git'
-NeoBundle 'git://github.com/jskywalk/nerdtree_search.git', { 'build': { 'unix': 'cp ./nerdtree_search.vim ../nerdtree/nerdtree_plugin' } }
 NeoBundle 'git://github.com/mhinz/vim-startify.git'
-NeoBundle 'git://github.com/scrooloose/nerdtree.git'
 NeoBundle 'git://github.com/scrooloose/syntastic.git'
 NeoBundle 'git://github.com/tpope/vim-fugitive.git'
 NeoBundle 'git://github.com/vim-scripts/sudo.vim.git'
