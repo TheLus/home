@@ -1,0 +1,6 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =4
+let g:netrw_dirhist_1='/home/vagrant/repository/gulp-fight'
+let g:netrw_dirhist_2='/home/vagrant/repository/ghq-saver/gulp'
+let g:netrw_dirhist_3='/home/vagrant/repository/ghq-saver/client-src'
+let g:netrw_dirhist_4='/home/vagrant/repository/ghq-saver/client-src/less/modules'
