@@ -12,6 +12,7 @@ if has('vim_starting')
 endif
 call neobundle#rc(expand('~/.vim/bundle'))
 
+NeoBundle 'git://github.com/groenewege/vim-less.git'
 NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
 NeoBundle 'git://github.com/Shougo/neocomplcache.git'
 NeoBundle 'git://github.com/Shougo/neomru.vim.git'
@@ -34,6 +35,8 @@ NeoBundle 'tomasr/molokai'
 NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'vim-scripts/newspaper.vim'
 NeoBundle 'git://github.com/t9md/vim-quickhl.git'
+NeoBundle 'git://github.com/Shougo/neosnippet.git'
+NeoBundle 'git://github.com/jason0x43/vim-js-indent.git'
 
 syntax on
 filetype plugin on
@@ -64,17 +67,20 @@ set includeexpr=substitute(v:fname,'\(\.\|\\/\)','/','')
 set suffixesadd=.php,.js,.rb,.java,.json,.md,.as
 set path+=./;/
 set splitright
-set virtualedit=all
+set showtabline=2
+set pumheight=30
+set incsearch
+set cindent
 
 
 let mapleader = "\<Space>"
 nmap <LEADER><LEADER>m <Plug>(quickhl-cword-toggle)
 nmap <LEADER>m <Plug>(quickhl-manual-this)
 vmap <LEADER>m <Plug>(quickhl-manual-this)
-nnoremap <space>h <C-w>h
-nnoremap <space>j <C-w>j
-nnoremap <space>k <C-w>k
-nnoremap <space>l <C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 nnoremap <space>, :<C-u>source $MYVIMRC<cr>
 nnoremap <space>n :VimFilerBufferDir -simple -buffer-name=vimfiler -auto-cd -split -no-quit -winwidth=35 -toggle -direction=topleft<CR>
 nnoremap <space>. :<C-u>edit $MYVIMRC<cr>
@@ -177,6 +183,9 @@ endfunction
 " move cursor.
 imap <expr><TAB> g:my_cursor_move_or_snippet_expand_command()
 function! g:my_cursor_move_or_snippet_expand_command()
+  if neosnippet#expandable() || neosnippet#jumpable()
+    return "\<PLUG>(neosnippet_expand_or_jump)"
+  endif
   if getline('.')[0:col('.')-2] =~# '^\(\t\|\s\)*$'
     return "\<TAB>"
   endif
@@ -188,17 +197,32 @@ nnoremap <expr>gf<CR> g:my_cursor_word_search_command('open')
 nnoremap <expr>gfv g:my_cursor_word_search_command('vsplit')
 nnoremap <expr>gfs g:my_cursor_word_search_command('split')
 function! g:my_cursor_word_search_command(action)
-  let word = strlen(expand('<cWORD>')) ? tolower(expand('<cWORD>')) : ''
+  let iskeyword = &iskeyword
+  setlocal iskeyword +=.-/
+  let word = strlen(expand('<cword>')) ? tolower(expand('<cword>')) : ''
   let word = substitute(word, '\.', '/', 'g')
-  let word = substitute(word, '^\/\=.\{-}\/', '', 'g')
-  let word = substitute(word, '[^[:alnum:]\/_]', '', 'g')
   let word = substitute(word, '\/\+', '\/', 'g')
-  echomsg word
-  return printf(":\<C-u>Unite -buffer-name=file_rec/async -input=%s -immediately -default-action=%s file_rec/async:%s\<CR>",
-        \ word,
+  let word = substitute(word, '^\/\|\/$', '', 'g')
+  let word = substitute(word, '^.*\/', '', 'g')
+  execute 'setlocal iskeyword=' . iskeyword
+  return printf(":\<C-u>Unite -buffer-name=file_rec/async -immediately -default-action=%s -input=%s file_rec/async:%s\<CR>",
         \ a:action,
+        \ word,
         \ (g:my_unite_project_dir != "" ? g:my_unite_project_dir : "!"))
 endfunction
+
+"function! g:my_cursor_word_search_command(action)
+"  let word = strlen(expand('<cWORD>')) ? tolower(expand('<cWORD>')) : ''
+"  let word = substitute(word, '\.', '/', 'g')
+"  let word = substitute(word, '^\/\=.\{-}\/', '', 'g')
+"  let word = substitute(word, '[^[:alnum:]\/_]', '', 'g')
+"  let word = substitute(word, '\/\+', '\/', 'g')
+"  echomsg word
+"  return printf(":\<C-u>Unite -buffer-name=file_rec/async -input=%s -immediately -default-action=%s file_rec/async:%s\<CR>",
+"        \ word,
+"        \ a:action,
+"        \ (g:my_unite_project_dir != "" ? g:my_unite_project_dir : "!"))
+"endfunction
 
 " file_rec
 nnoremap <expr><C-p> g:my_project_file_command()
@@ -274,6 +298,7 @@ if neobundle#is_installed('vimfiler')
     nnoremap <buffer>b :Unite -buffer-name=bookmark -default-action=cd -no-start-insert bookmark<CR>
     nmap     <buffer><CR> <plug>(vimfiler_edit_file)
     nnoremap <buffer><F5> :<C-u>call vimfiler#mappings#do_current_dir_action('my_project_cd')<CR>
+    nmap     <buffer><C-l> <C-w>l
   endfunction
 endif
 
