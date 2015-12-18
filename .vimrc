@@ -10,8 +10,8 @@ if has('vim_starting')
     call feedkeys("\<space>n")
   endif
 endif
-call neobundle#rc(expand('~/.vim/bundle'))
 
+call neobundle#begin(expand('~/.vim/bundle'))
 NeoBundle 'git://github.com/groenewege/vim-less.git'
 NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
 NeoBundle 'git://github.com/Shougo/neocomplcache.git'
@@ -37,6 +37,7 @@ NeoBundle 'vim-scripts/newspaper.vim'
 NeoBundle 'git://github.com/t9md/vim-quickhl.git'
 NeoBundle 'git://github.com/Shougo/neosnippet.git'
 NeoBundle 'git://github.com/jason0x43/vim-js-indent.git'
+call neobundle#end()
 
 syntax on
 filetype plugin on
@@ -56,7 +57,7 @@ set hidden
 set noswapfile
 set nobackup
 set expandtab
-set tabstop=2
+set tabstop=3
 set softtabstop=2
 set autoindent
 set smartindent
@@ -106,6 +107,12 @@ nnoremap <expr><silent><LEADER><ESC> printf(":\<C-u>%s\<CR>:\<C-u>%s\<CR>:\<C-u>
       \ 'QuickhlCwordDisable',
       \ 'nohlsearch',
       \ 'redraw!')
+
+autocmd! FileType php setlocal noexpandtab
+autocmd! FileType html setlocal noexpandtab
+autocmd! FileType tpl setlocal noexpandtab
+
+
 
 autocmd! InsertLeave * call g:my_insertleave_setting()
 function! g:my_insertleave_setting()
